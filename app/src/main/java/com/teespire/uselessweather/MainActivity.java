@@ -7,8 +7,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.RadioButton;
 
+import com.teespire.elements.SearchElement;
+
 
 public class MainActivity extends Activity {
+
+    private String localWeatherBaseURL = "http://api.worldweatheronline.com/free/v2/weather.ashx?q=-14.9333%2C-74.6667&format=json&num_of_days=5&key=e0714ce00363fc7935e7921fc378a";
 
     private boolean isWwoSelected;
 
@@ -49,7 +53,21 @@ public class MainActivity extends Activity {
 
         Intent searchActivityIntent = new Intent(this, SearchActivity.class);
         searchActivityIntent.putExtra("isWwoSelected", isWwoSelected);
-        startActivity(searchActivityIntent);
+        startActivityForResult(searchActivityIntent, 100);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode == RESULT_OK){
+            if(requestCode == 100){
+                SearchElement searchElement = new SearchElement();
+                searchElement.setCityName(data.getStringExtra("cityName"));
+                searchElement.setLatitude(data.getStringExtra("latitude"));
+                searchElement.setLongitude(data.getStringExtra("longitude"));
+
+                Log.d("MainActivity", "Activity Result Item=" + searchElement.getCityName()
+                        + ", Latitude=" + searchElement.getLatitude());
+            }
+        }
+    }
 }
